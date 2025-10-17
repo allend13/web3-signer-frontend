@@ -2,7 +2,7 @@ import { envs } from "./envs"
 import { useAccount } from "wagmi"
 
 export const useIsTargetNetwork = () => {
-    const { chainId, isConnected } = useAccount()
+    const { chainId } = useAccount()
 
     if (chainId === undefined) {
         return false

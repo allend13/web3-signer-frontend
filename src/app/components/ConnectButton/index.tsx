@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { useAccount } from "wagmi";
-import { useDynamicContext, useSwitchNetwork } from "@dynamic-labs/sdk-react-core";
+import { useDynamicContext, useSwitchNetwork, getNetwork } from "@dynamic-labs/sdk-react-core";
 import { match } from "ts-pattern";
+import { sepolia } from "viem/chains";
 
 import { Button } from "@/components/ui/button";
 import { useIsTargetNetwork } from "@/lib/chain-utils";
@@ -8,6 +10,7 @@ import { useIsTargetNetwork } from "@/lib/chain-utils";
 export const ConnectButton = () => {
     const { isConnected, isReconnecting, isConnecting } = useAccount();
     const { setShowAuthFlow, handleLogOut, primaryWallet } = useDynamicContext();
+    const switchNetwork = useSwitchNetwork();
     const isTargetNetwork = useIsTargetNetwork()
 
     const handleConnect = () => {
@@ -18,13 +21,13 @@ export const ConnectButton = () => {
         handleLogOut()
     }
 
-    // const handleSwitchNetwork = async () => {
-    //     if (!primaryWallet) {
-    //         return;
-    //     }
+    const handleSwitchNetwork = async () => {
+        if (!primaryWallet) {
+            return;
+        }
 
-    //     await switchNetwork({ wallet: primaryWallet, network: sepolia.id });
-    // }
+        await switchNetwork({ wallet: primaryWallet, network: sepolia.id });
+    }
     
     return match({ isConnected, isReconnecting, isConnecting, isTargetNetwork })
         .with({ isConnected: false, isReconnecting: true } , { isConnected: false, isConnecting: true}, () => (
@@ -35,7 +38,7 @@ export const ConnectButton = () => {
                 Wallet Reconnecting...
             </Button>
         ))
-        .with({ isConnected: false, isReconnecting: false, isConnecting: false}, () => (
+        .with({ isConnected: false, isReconnecting: false, isConnecting: false }, () => (
             <Button
                 onClick={handleConnect}
                 className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white rounded-xl px-6"
@@ -43,12 +46,20 @@ export const ConnectButton = () => {
                 Connect Wallet
             </Button>
         ))
-        .with({ isConnected: true, isReconnecting: false, isConnecting: false }, () => (
+        .with({ isConnected: true, isReconnecting: false, isConnecting: false, isTargetNetwork: true }, () => (
             <Button
                 onClick={handleDisconnect}
                 className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white rounded-xl px-6"
             >
                 Disconnect Wallet
+            </Button>
+        ))
+        .with({ isConnected: true, isReconnecting: false, isConnecting: false, isTargetNetwork: false }, () => (
+            <Button
+                onClick={handleSwitchNetwork}
+                className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white rounded-xl px-6"
+            >
+                Wrong Network
             </Button>
         ))
         .otherwise(() => null)
