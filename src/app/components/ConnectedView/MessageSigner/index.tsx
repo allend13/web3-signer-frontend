@@ -58,7 +58,7 @@ export function MessageSigner({ onSignatureCreated }: MessageSignerProps) {
 
         <Button
           onClick={handleSign}
-          disabled={!userMessage || isSigning || !isTargetNetwork}
+          disabled={!userMessage || isSigning}
           className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white h-12 rounded-xl"
         >
           {isSigning ? (

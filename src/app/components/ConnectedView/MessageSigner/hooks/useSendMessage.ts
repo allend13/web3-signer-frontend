@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query"
 import { signMessage } from "wagmi/actions"
 import { Config, useAccount, useConfig } from "wagmi"
 import { Address } from "viem"
+import { toast } from "react-toastify"
 
 import { envs } from "@/lib/envs"
 import { apiFetch } from "@/lib/fetch"
@@ -17,13 +18,18 @@ export type ExpectedVerifiableMessageObject = {
 
 export type UseSignAndSendMessageMutationFnProps = {
     wagmiConfig: Config,
+    chainId: number | undefined,
     userMessage: string,
     address: Address | undefined
 }
 
-const useSignAndSendMessageMutationFn = async ({ wagmiConfig, userMessage, address }: UseSignAndSendMessageMutationFnProps) => {
+const useSignAndSendMessageMutationFn = async ({ wagmiConfig, chainId, userMessage, address }: UseSignAndSendMessageMutationFnProps) => {
     if (!address) {
         throw new Error("Address is required")
+    }
+
+    if (!chainId) {
+        throw new Error("Chain ID is required")
     }
 
     if (!userMessage) {
@@ -40,7 +46,7 @@ const useSignAndSendMessageMutationFn = async ({ wagmiConfig, userMessage, addre
     const messageObjectToSign: ExpectedVerifiableMessageObject = {
         address,
         domain: envs.EXPECTED_DOMAIN,
-        chainId: envs.TARGET_CHAIN_ID,
+        chainId: chainId.toString(),
         uri: envs.EXPECTED_URI,
         nonce: nonce,
         userMessage,
@@ -70,13 +76,36 @@ const useSignAndSendMessageMutationFn = async ({ wagmiConfig, userMessage, addre
 
 export const useSignAndSendMessage = () => {
     const wagmiConfig = useConfig()
+    const { chainId } = useAccount()
     const { address } = useAccount()
 
     return useMutation({
         mutationFn: (userMessage: string) => useSignAndSendMessageMutationFn({
             wagmiConfig, 
+            chainId,
             userMessage, 
             address 
         }),
+        onError: (error) => {
+            const errorMessage = error instanceof Error ? error.message : 'Server error, please try again later'
+            toast.error(errorMessage, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            })
+        },
+        onSuccess: () => {
+            toast.success('Message signed and verified successfully!', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            })
+        }
     })
 }
