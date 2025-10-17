@@ -2,7 +2,6 @@
 
 import {
     DynamicContextProvider,
-    DynamicWidget,
 } from '@dynamic-labs/sdk-react-core';
 import { EthereumWalletConnectors } from '@dynamic-labs/ethereum';
 import { DynamicWagmiConnector } from '@dynamic-labs/wagmi-connector';
@@ -23,11 +22,10 @@ import { Header } from './components/Header';
 
 
 const config = createConfig({
-    chains: [mainnet, sepolia],
+    chains: [sepolia],
     multiInjectedProviderDiscovery: false,
     transports: {
         [sepolia.id]: http(),
-        [mainnet.id]: http(),
     },
 });
 

@@ -43,7 +43,7 @@ export const ConnectButton = () => {
                 Connect Wallet
             </Button>
         ))
-        .with({ isConnected: true, isReconnecting: false, isConnecting: false, isTargetNetwork: true }, () => (
+        .with({ isConnected: true, isReconnecting: false, isConnecting: false }, () => (
             <Button
                 onClick={handleDisconnect}
                 className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white rounded-xl px-6"
@@ -51,13 +51,5 @@ export const ConnectButton = () => {
                 Disconnect Wallet
             </Button>
         ))
-        // .with({ isConnected: true, isReconnecting: false, isConnecting: false, isTargetNetwork: false }, () => (
-        //     <Button
-        //         onClick={handleSwitchNetwork}
-        //         className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white rounded-xl px-6"
-        //     >
-        //         Wrong Network
-        //     </Button>
-        // ))
         .otherwise(() => null)
 }
