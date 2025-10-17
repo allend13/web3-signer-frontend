@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { useSignAndSendMessage } from './hooks/useSendMessage'
-import { useIsTargetNetwork } from '@/lib/chain-utils'
 
 export interface VerifyResponse {
   isValid: boolean
@@ -28,8 +27,10 @@ export interface MessageSignerProps {
 
 export function MessageSigner({ onSignatureCreated }: MessageSignerProps) {
   const [userMessage, setUserMessage] = useState('')
-  const { mutateAsync: signAndSendMessage, isPending: isSigning } = useSignAndSendMessage() 
-  const isTargetNetwork = useIsTargetNetwork()
+
+  const clearUserMessage = () => setUserMessage('')
+
+  const { mutateAsync: signAndSendMessage, isPending: isSigning } = useSignAndSendMessage(clearUserMessage) 
 
   const handleSign = () => {
     signAndSendMessage(userMessage)

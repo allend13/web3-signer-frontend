@@ -74,7 +74,7 @@ const useSignAndSendMessageMutationFn = async ({ wagmiConfig, chainId, userMessa
 }
 
 
-export const useSignAndSendMessage = () => {
+export const useSignAndSendMessage = (onSuccessCb?: () => void) => {
     const wagmiConfig = useConfig()
     const { chainId } = useAccount()
     const { address } = useAccount()
@@ -90,7 +90,7 @@ export const useSignAndSendMessage = () => {
             const errorMessage = error instanceof Error ? error.message : 'Server error, please try again later'
             toast.error(errorMessage, {
                 position: "bottom-right",
-                autoClose: 5000,
+                autoClose: 3500,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -98,9 +98,11 @@ export const useSignAndSendMessage = () => {
             })
         },
         onSuccess: () => {
+            onSuccessCb?.()
+
             toast.success('Message signed and verified successfully!', {
                 position: "bottom-right",
-                autoClose: 5000,
+                autoClose: 3500,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
