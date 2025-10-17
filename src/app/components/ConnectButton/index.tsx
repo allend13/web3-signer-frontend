@@ -1,7 +1,6 @@
 import { useAccount } from "wagmi";
 import { useDynamicContext, useSwitchNetwork } from "@dynamic-labs/sdk-react-core";
 import { match } from "ts-pattern";
-import { sepolia } from "viem/chains";
 
 import { Button } from "@/components/ui/button";
 import { useIsTargetNetwork } from "@/lib/chain-utils";
@@ -9,7 +8,6 @@ import { useIsTargetNetwork } from "@/lib/chain-utils";
 export const ConnectButton = () => {
     const { isConnected, isReconnecting, isConnecting } = useAccount();
     const { setShowAuthFlow, handleLogOut, primaryWallet } = useDynamicContext();
-    const switchNetwork = useSwitchNetwork();
     const isTargetNetwork = useIsTargetNetwork()
 
     const handleConnect = () => {

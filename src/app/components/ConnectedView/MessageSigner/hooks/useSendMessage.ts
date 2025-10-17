@@ -23,7 +23,7 @@ export type UseSignAndSendMessageMutationFnProps = {
     address: Address | undefined
 }
 
-const useSignAndSendMessageMutationFn = async ({ wagmiConfig, chainId, userMessage, address }: UseSignAndSendMessageMutationFnProps) => {
+const signAndSendMessageMutationFn = async ({ wagmiConfig, chainId, userMessage, address }: UseSignAndSendMessageMutationFnProps) => {
     if (!address) {
         throw new Error("Address is required")
     }
@@ -80,7 +80,7 @@ export const useSignAndSendMessage = (onSuccessCb?: () => void) => {
     const { address } = useAccount()
 
     return useMutation({
-        mutationFn: (userMessage: string) => useSignAndSendMessageMutationFn({
+        mutationFn: (userMessage: string) => signAndSendMessageMutationFn({
             wagmiConfig, 
             chainId,
             userMessage, 

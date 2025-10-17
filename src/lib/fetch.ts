@@ -18,8 +18,9 @@ type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
 
 // API Fetch Options
 type ApiFetchOptions = {
-  method?: 'GET' | 'POST';
-  body?: Record<string, any>;
+    method?: 'GET' | 'POST';
+    /* eslint-disable  @typescript-eslint/no-explicit-any */
+    body?: Record<string, any>;
 };
 
 /**
